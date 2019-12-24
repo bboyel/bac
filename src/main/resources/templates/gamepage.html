@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Game</title>
+    <style>
+			* {
+		  box-sizing: border-box;
+		}
+
+		button:focus {
+		  outline: none;
+		}
+
+		button:not(:disabled) {
+		  cursor: pointer;
+		}
+
+		button:disabled {
+		  opacity: 0.5;
+		}
+
+		.container {
+		  display: flex;
+		}
+
+		.field {
+		  margin-right: 100px;
+		}
+
+		.input {
+		  width: 250px;
+		  margin: 0 0 20px;
+		  font-size: 16px;
+		}
+
+		.form {
+		  width: 250px;
+		  display: flex;
+		  flex-wrap: wrap;
+		  justify-content: space-between;
+		}
+
+		.btn {
+		  padding: 5px;
+		  width: 80px;
+		  height: 80px;
+		  margin-bottom: 5px;
+		}
+
+		.btn[type="submit"] {
+		  background-color: rgba(11, 160, 68, 0.8);
+		}
+
+		.btn[type="reset"] {
+		  background-color: rgba(226, 63, 42, 0.8);
+		}
+
+		.new {
+		  padding: 10px 20px;
+		  font-size: 15px;
+		  color: white;
+		  border: none;
+		  border-radius: 5px;
+		  background-color: #0a7e27;
+		}
+
+	</style>
+  </head>
+
+  <body>
+    <main>
+      <div class="container">
+        <div class="field">
+          <input disabled type="numder" class="input" />
+          <form class="form">
+            <button class="btn" type="button" disabled>1</button>
+            <button class="btn" type="button" disabled>2</button>
+            <button class="btn" type="button" disabled>3</button>
+            <button class="btn" type="button" disabled>4</button>
+            <button class="btn" type="button" disabled>5</button>
+            <button class="btn" type="button" disabled>6</button>
+            <button class="btn" type="button" disabled>7</button>
+            <button class="btn" type="button" disabled>8</button>
+            <button class="btn" type="button" disabled>9</button>
+            <button class="btn" type="submit" disabled>Отправить</button>
+            <button class="btn" type="button" disabled>0</button>
+            <button class="btn" type="reset" disabled>Удалить</button>
+          </form>
+        </div>
+        <div class="description">
+          <button type="button" class="new">Новая игра</button>
+          <h4>Правила игры:</h4>
+          <p class="rule"></p>
+          <h4>Результат:</h4>
+          <div class="result"></div>
+        </div>
+      </div>
+    </main>
+    <script>
+			window.addEventListener("DOMContentLoaded", () => {
+		  const form = document.querySelector(".form");
+		  const buttons = document.querySelectorAll(".btn[type='button']");
+		  const buttonReset = document.querySelector(".btn[type='reset']");
+		  const buttonSubmit = document.querySelector(".btn[type='submit']");
+		  const buttonNew = document.querySelector(".new");
+		  const input = document.querySelector(".input");
+		  const result = document.querySelector(".result");
+
+		  const customNumders = [];
+
+		  const disabledOn = btn => btn.setAttribute("disabled", "true");
+		  const disabledOff = btn => btn.removeAttribute("disabled");
+
+		  const setState = () => {
+			input.value = customNumders.join("");
+
+			if (customNumders.length === 4) {
+			  disabledOff(buttonSubmit);
+			  buttons.forEach(disabledOn);
+			}
+		  };
+
+		  const resetNumbers = () => {
+			customNumders.length = 0;
+			setState();
+            buttons.forEach(disabledOff);
+            disabledOn(buttonSubmit);
+		  };
+
+		  const userWin = () => {
+            customNumders.length = 0;
+            input.value = customNumders.join("");
+            buttons.forEach(disabledOn);
+            disabledOn(buttonSubmit);
+            disabledOn(buttonReset);
+            disabledOff(buttonNew);
+          }
+
+		  const addAnswer = answer => {
+			const str = document.createElement("p");
+			str.textContent = customNumders.join('') + ' - ' + answer;
+			result.appendChild(str);
+		  };
+
+		  buttonNew.addEventListener("click", ({ target }) => {
+            const data = {
+              id: 907
+            }
+
+            fetch("/gamepage/newgame", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
+            })
+            .then(response => {
+              if (response.ok) {
+                result.textContent = "";
+                return;
+              } else {
+                result.textContent = "Ошибка сервера";
+              }
+            })
+            .then(() => {
+              buttons.forEach(disabledOff);
+              disabledOff(buttonReset);
+              disabledOn(target);
+            })
+            .catch(() => {
+              result.textContent = "Ошибка. Обратитесь к администратору";
+            });
+		  });
+
+		  buttons.forEach(btn => {
+			btn.addEventListener("click", () => {
+			  if (customNumders.length < 4) {
+				customNumders.push(btn.textContent);
+				setState();
+				disabledOn(btn);
+			  }
+			});
+		  });
+
+		  buttonReset.addEventListener("click", () => resetNumbers());
+
+		  form.addEventListener("submit", e => {
+			e.preventDefault();
+
+			if (customNumders.length !== 4) {
+			  return;
+			}
+
+			const data = {
+			  id: 907,
+			  userNumStr: customNumders.join("")
+			};
+
+			fetch("/gamepage/game", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json"
+			  },
+			  body: JSON.stringify(data)
+			})
+			  .then(response =>
+				response.ok ? response.json() : (result.textContent = "Ошибка сервера")
+			  )
+			  .then(json => {
+				addAnswer(json.data.message);
+
+				if (json.data.isWin) {
+                  userWin();
+				} else {
+				  resetNumbers();
+				}
+			  })
+			  .catch(() => {
+				result.textContent = "Ошибка. Обратитесь к администратору";
+			  });
+		  });
+		});
+
+	</script>
+  </body>
+</html>
