@@ -1,4 +1,4 @@
-package com.erenkov.bac;
+package com.erenkov.bac.config;
 
 import javax.sql.DataSource;
 
