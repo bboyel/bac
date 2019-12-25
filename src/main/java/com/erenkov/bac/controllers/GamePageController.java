@@ -1,6 +1,6 @@
 package com.erenkov.bac.controllers;
 
-import com.erenkov.bac.GameService;
+import com.erenkov.bac.services.GameService;
 import com.erenkov.bac.Game;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

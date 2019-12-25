@@ -1,4 +1,4 @@
-package com.erenkov.bac;
+package com.erenkov.bac.services;
 
 import java.util.ArrayList;
 import java.util.List;

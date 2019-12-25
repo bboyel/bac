@@ -2,7 +2,7 @@ package com.erenkov.bac.config;
 
 import javax.sql.DataSource;
 
-import com.erenkov.bac.UserDetailsServiceImpl;
+import com.erenkov.bac.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -46,11 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         // The pages does not require login
-        http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
+        http.authorizeRequests().antMatchers("/", "/login", "/logout", "/welcome", "/registration").permitAll();
 
         // /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
         // If no login, it will redirect to /login page.
-        http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+        http.authorizeRequests().antMatchers("/userInfo", "/gamepage").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
 
         // For ADMIN only.
         http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
@@ -65,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Submit URL of login page.
                 .loginProcessingUrl("/j_spring_security_check") // Submit URL
                 .loginPage("/login")//
-                .defaultSuccessUrl("/userAccountInfo")//
+                .defaultSuccessUrl("/login")//
                 .failureUrl("/login?error=true")//
                 .usernameParameter("username")//
                 .passwordParameter("password")
@@ -81,8 +80,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
-        InMemoryTokenRepositoryImpl memory = new InMemoryTokenRepositoryImpl();
-        return memory;
+        JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+        db.setDataSource(this.dataSource);
+        return db;
     }
 
 }
