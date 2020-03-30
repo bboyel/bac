@@ -1,15 +1,18 @@
 package com.erenkov.bac.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import com.erenkov.bac.AppUserDAO;
-import com.erenkov.bac.AppUser;
-import com.erenkov.bac.AppRoleDAO;
+import com.erenkov.bac.dao.UserDAO;
+import com.erenkov.bac.entity.Role;
+import com.erenkov.bac.entity.User;
+import com.erenkov.bac.dao.RoleDAO;
+import com.erenkov.bac.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,36 +22,44 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private AppUserDAO appUserDAO;
-
-    @Autowired
-    private AppRoleDAO appRoleDAO;
+    private UserRepo userRepository;
+//
+//    @Autowired
+//    private UserDAO userDAO;
+//
+//    @Autowired
+//    private RoleDAO roleDAO;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        AppUser appUser = this.appUserDAO.findUserAccount(userName);
+        User user = this.userRepository.findByUserName(userName);//UserAccount(userName);
 
-        if (appUser == null) {
+        if (user == null) {
             System.out.println("User not found! " + userName);
             throw new UsernameNotFoundException("User " + userName + " was not found in the database");
         }
 
-        System.out.println("Found User: " + appUser);
+        System.out.println("Found User: " + user);
 
         // [ROLE_USER, ROLE_ADMIN,..]
-        List<String> roleNames = this.appRoleDAO.getRoleNames(appUser.getUserId());
+//        List<String> roleNames = this.roleDAO.getRoleNames(user.getUserId());
 
-        List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
-        if (roleNames != null) {
-            for (String role : roleNames) {
-                // ROLE_USER, ROLE_ADMIN,..
-                GrantedAuthority authority = new SimpleGrantedAuthority(role);
-                grantList.add(authority);
-            }
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        for (Role role : user.getRoles()){
+            grantedAuthorities.add(new SimpleGrantedAuthority(role.getRoleName()));
         }
 
-        UserDetails userDetails = (UserDetails) new User(appUser.getUserName(), //
-                appUser.getEncrytedPassword(), grantList);
+//        List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
+//        if (roleNames != null) {
+//            for (String role : roleNames) {
+//                // ROLE_USER, ROLE_ADMIN,..
+//                GrantedAuthority authority = new SimpleGrantedAuthority(role);
+//                grantList.add(authority);
+//            }
+//        }
+
+        UserDetails userDetails = (UserDetails) new org.springframework.security.core.userdetails.User(user.getUserName(), //
+                user.getEncrytedPassword(), grantedAuthorities);
 
         return userDetails;
     }

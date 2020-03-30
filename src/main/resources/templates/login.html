@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -24,42 +25,68 @@
 </div>
 
 <h3>Enter user name and password:</h3>
-<form name='f' action="/j_spring_security_check" method='POST'>
-    <table>
-        <tr>
-            <td>User:</td>
-            <td><input type='text' name='username' value=''></td>
-        </tr>
-        <tr>
-            <td>Password:</td>
-            <td><input type='password' name='password' /></td>
-        </tr>
-        <tr>
-            <td>Remember Me?</td>
-            <td><input type="checkbox" name="remember-me" /></td>
-        </tr>
-        <tr>
-            <td><input name="submit" type="submit" value="Sign In" /></td>
-        </tr>
-    </table>
+<form class="loginform" name='loginForm' >
+    <div class="userInfo">
+        <table>
+            <tr>
+                <td>User:</td>
+                <td><input type='text' name='username' value=''></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type='password' name='password' /></td>
+            </tr>
+            <tr>
+                <td>Remember Me?</td>
+                <td><input type="checkbox" name="remember-me" /></td>
+            </tr>
+            <tr>
+                <td><button class="sbmt" type="submit">Sign In</button></td>>
+
+<!--                <td><input class="sbmt" name="submit" type="submit" value="Sign In" /></td>-->
+            </tr>
+        </table>
+    </div>
 </form>
 
-<form action="/logout" method="post">
 
-    <input type="submit" value="Sign Out"/>
-</form>
-<br />
-<a href="/registration">Регистрация</a>
-<br />
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector(".loginform");
+        const usernameInpt = document.querySelector("div.userInfo input[name='username']");
+        const passwordInpt = document.querySelector("div.userInfo input[name='password']");
 
-<a href="/">Вернуться в окно приветствия</a>
-<br />
-<br />
-Username/pass:
-<ul>
-    <li>dbuser1/123</li>
-    <li>dbadmin1/123</li>
-</ul>
 
+
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+
+
+            const data = {
+                loginName: usernameInpt.value,
+                password: passwordInpt.value
+            };
+
+            fetch("/j_spring_security_check", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response =>
+                    response.ok ? response.json() : ( console.log("Ошибка сервера"))
+                )
+                .then(json => {
+
+                    ;
+                })
+                .catch(() => {
+                    console.log("Ошибка. Обратитесь к администратору");
+                });
+        });
+    });
+
+</script>
 </body>
 </html>

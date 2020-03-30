@@ -1,4 +1,4 @@
-package com.erenkov.bac;
+package com.erenkov.bac.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

@@ -1,26 +1,17 @@
 package com.erenkov.bac.controllers;
 
-//import com.erenkov.bac.PersonDAO;
-//import com.erenkov.bac.Person;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.erenkov.bac.PersonForm;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.erenkov.bac.WebUtils;
+import com.erenkov.bac.utils.WebUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class MainController {
@@ -54,6 +45,12 @@ public class MainController {
 
         return "403Page";
     }
+
+    @RequestMapping(value = { "/logoutSuccessfulPage" }, method = RequestMethod.GET)
+    public String viewLogoutSuccessfulPage() {
+        return "logoutSuccessfulPage";
+    }
+
 }
     //DB
 //    @Autowired

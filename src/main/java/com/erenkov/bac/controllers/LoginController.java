@@ -14,10 +14,4 @@ public class LoginController {
         return "login";
     }
 
-
-//    @RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public String loginPage(Model model) {
-//
-//        return "loginPage";
-//    }
 }

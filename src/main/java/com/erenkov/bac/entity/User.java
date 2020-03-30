@@ -1,20 +1,16 @@
-package com.erenkov.bac;
+package com.erenkov.bac.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "App_User", //
         uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_USER_UK", columnNames = "User_Name") })
-public class AppUser {
+public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "User_Id", nullable = false)
     private Long userId;
 
@@ -26,6 +22,34 @@ public class AppUser {
 
     @Column(name = "Enabled", length = 1, nullable = false)
     private boolean enabled;
+
+    @Column(name = "Statistic", length = 36, nullable = false)
+    private Long statistic;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable (name="User_Roles",
+            joinColumns=@JoinColumn (name="User_Id"),
+            inverseJoinColumns=@JoinColumn(name="Role_Id"))
+    private Set<Role> roles;
+
+    public User() {
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Long getStatistic() {
+        return statistic;
+    }
+
+    public void setStatistic(Long statistic) {
+        this.statistic = statistic;
+    }
 
     public Long getUserId() {
         return userId;

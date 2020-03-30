@@ -35,6 +35,14 @@ public class Game {
         return hiddenNumStr;
     }
 
+    public String getUserNumStr() {
+        return userNumStr;
+    }
+
+    public void setUserNumStr(String userNumStr) {
+        this.userNumStr = userNumStr;
+    }
+
     public void setHiddenNumStr() {
         StringBuilder aHiddenNumStr;
         aHiddenNumStr = new StringBuilder();
@@ -55,19 +63,11 @@ public class Game {
         System.out.println(hiddenNumStr.toString());  // ОТЛАДКА !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
-    public String getUserNumStr() {
-        return userNumStr;
-    }
-
-    public void setUserNumStr(String userNumStr) {
-        this.userNumStr = userNumStr;
-    }
-
 
     public String tryToWin(String userNumStr){
 
         int  numberCows  = 0;        // Количество "коров"
-        int  numberBulls = 0;       //          и "быков"
+        int  numberBulls = 0;        //          и "быков"
 
         if (hiddenNumStr.toString().equals(userNumStr)) {
             this.setIsWin(true);
