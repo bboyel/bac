@@ -1,0 +1,89 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                       xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+<changeSet id="1.0.0" author="erenkov">
+    <createTable tableName="App_Users">
+
+        <column name="user_id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+
+        <column name="username" type="VARCHAR(100)">
+            <constraints nullable="false" unique="false"/>
+        </column>
+
+        <column name="encrypted_password" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="enabled" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="statistic" type="BIGINT" autoIncrement="true">
+            <constraints nullable="false"/>
+        </column>
+
+    </createTable>
+</changeSet>
+
+
+<changeSet id="1.0.1" author="erenkov">
+    <createTable tableName="App_Roles">
+
+        <column name="role_id" type="BIGINT" autoIncrement="true">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+
+        <column name="role_name" type="VARCHAR(30)">
+            <constraints nullable="false" unique="true"/>
+        </column>
+
+    </createTable>
+</changeSet>
+
+
+<changeSet id="1.0.2" author="erenkov">
+    <createTable tableName="user_roles">
+        <column name="user_id" type="BIGINT">
+        </column>
+
+        <column name="role_id" type="BIGINT">
+        </column>
+    </createTable>
+</changeSet>
+
+
+<changeSet id="1.0.3" author="erenkov">
+    <addForeignKeyConstraint baseColumnNames="user_id"
+                             baseTableName="user_roles"
+                             constraintName="fk_user_roles_user"
+                             onDelete="CASCADE"
+                             onUpdate="RESTRICT"
+                             referencedColumnNames="user_id"
+                             referencedTableName="App_Users"/>
+</changeSet>
+
+<changeSet id="1.0.4" author="erenkov">
+    <addForeignKeyConstraint baseColumnNames="role_id"
+                             baseTableName="user_roles"
+                             constraintName="fk_user_roles_roles"
+                             onDelete="CASCADE"
+                             onUpdate="RESTRICT"
+                             referencedColumnNames="role_id"
+                             referencedTableName="App_Roles"/>
+</changeSet>
+
+<changeSet id="1.0.5" author="erenkov">
+    <insert tableName="App_Roles">
+        <column name="role_name" value="ROLE_USER"/>
+    </insert>
+
+    <insert tableName="App_Roles">
+        <column name="role_name" value="ROLE_ADMIN"/>
+    </insert>
+</changeSet>
+</databaseChangeLog>

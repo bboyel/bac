@@ -4,26 +4,26 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "App_User", //
+@Table(name = "App_Users", //
         uniqueConstraints = { //
-                @UniqueConstraint(name = "APP_USER_UK", columnNames = "User_Name") })
+                @UniqueConstraint(name = "APP_USER_UK", columnNames = "username") })
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "User_Id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "User_Name", length = 36, nullable = false)
+    @Column(name = "username", length = 100, nullable = false)
     private String userName;
 
-    @Column(name = "Encryted_Password", length = 128, nullable = false)
+    @Column(name = "encrypted_password", length = 128, nullable = false)
     private String encrytedPassword;
 
-    @Column(name = "Enabled", length = 1, nullable = false)
-    private boolean enabled;
+    @Column(name = "enabled", length = 25, nullable = false)
+    private String enabled;
 
-    @Column(name = "Statistic", length = 36, nullable = false)
+    @Column(name = "statistic", nullable = false)
     private Long statistic;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -75,12 +75,11 @@ public class User {
         this.encrytedPassword = encrytedPassword;
     }
 
-    public boolean isEnabled() {
+    public String getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(String enabled) {
         this.enabled = enabled;
     }
-
 }

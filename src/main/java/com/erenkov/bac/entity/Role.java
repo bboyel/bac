@@ -4,16 +4,16 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "App_Role",  uniqueConstraints = { //
+@Table(name = "App_Roles",  uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "Role_Name") })
 public class Role {
 
     @Id
-    @GeneratedValue//(strategy = GenerationType.IDENTITY)
-    @Column(name = "Role_Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "role_id", nullable = false)
     private Long roleId;
 
-    @Column(name = "Role_Name", length = 30, nullable = false)
+    @Column(name = "role_name", length = 30, nullable = false, unique = true)
     private String roleName;
 
     @ManyToMany//(mappedBy = "roles")
@@ -25,6 +25,7 @@ public class Role {
     public Role() {
 
     }
+
     public Set<User> getUsers() {
         return users;
     }
