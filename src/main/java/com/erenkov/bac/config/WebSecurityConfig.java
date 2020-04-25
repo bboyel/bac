@@ -38,10 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Setting Service to find User in the database.
         // And Setting PassswordEncoder
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    //    auth.jdbcAuthentication().dataSource(dataSource);
-   //     .usersByUsernameQuery("select username, password, enabled from users where username = ?")
+        //    auth.jdbcAuthentication().dataSource(dataSource);
+        //     .usersByUsernameQuery("select username, password, enabled from users where username = ?")
         //.authoritiesByUsernameQuery("select u.username, r.role from users inner join user_role on u.role = r.id" +
-  //              " where username = ?");
+        //              " where username = ?");
     }
 
     @Override
@@ -51,11 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // The pages does not require login
         http.authorizeRequests().antMatchers("/", "/login", "/logout", "/welcome", "/registration",     //
-                "logoutSuccessfulPage","/gamepage").permitAll();
+                "logoutSuccessfulPage").permitAll();
 
-        // /userInfo page requires login as ROLE_USER or ROLE_ADMIN.
-        // If no login, it will redirect to /login page.
-        http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+        http.authorizeRequests().antMatchers("/userInfo", "/gamepage")
+                                .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
 
         // For ADMIN only.
         http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
@@ -78,19 +77,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessfulPage");
 
 
-        // Config Remember Me.
-//        http.authorizeRequests().and() //
-//                .rememberMe().tokenRepository(this.persistentTokenRepository()) //
-//                .tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+/*
+todo
+ Config Remember Me.
+        http.authorizeRequests().and() //
+                .rememberMe().tokenRepository(this.persistentTokenRepository()) //
+                .tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
+*/
 
     }
 
+    /*
+todo
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
         db.setDataSource(this.dataSource);
         return db;
     }
+*/
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -101,6 +106,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
-    };
+    }
+
+    ;
 
 }

@@ -51,7 +51,7 @@ public class RegistrationController {
         roleRepo.saveAndFlush(usRole);
 
          userService.save(user);
-         //securityService.autoLogin(user.getUserName(), user.getEncrytedPassword());
+         securityService.autoLogin(user.getUserName(), user.getEncrytedPassword());
 
         return "redirect:/login";
     }

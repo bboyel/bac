@@ -46,16 +46,16 @@ public class Game {
     public void setHiddenNumStr() {
         StringBuilder aHiddenNumStr;
         aHiddenNumStr = new StringBuilder();
-        int i=0;                             //Счётчик для цикла
+        int i = 0;                             //Счётчик для цикла
 
         /*  Компьютер придумывает число  */
         final Random random = new Random();
 
         aHiddenNumStr.append(random.nextInt(10));
-        while (i<3){
-            int k =random.nextInt(10);
-            if (aHiddenNumStr.indexOf( k + "" ) == -1 ){
-                aHiddenNumStr.append( k );
+        while (i < 3) {
+            int k = random.nextInt(10);
+            if (aHiddenNumStr.indexOf(k + "") == -1) {
+                aHiddenNumStr.append(k);
                 i++;
             }
         }
@@ -64,10 +64,10 @@ public class Game {
     }
 
 
-    public String tryToWin(String userNumStr){
+    public String tryToWin(String userNumStr) {
 
-        int  numberCows  = 0;        // Количество "коров"
-        int  numberBulls = 0;        //          и "быков"
+        int numberCows = 0;        // Количество "коров"
+        int numberBulls = 0;        //          и "быков"
 
         if (hiddenNumStr.toString().equals(userNumStr)) {
             this.setIsWin(true);
@@ -90,7 +90,6 @@ public class Game {
 
         return numberBulls + "Б" + numberCows + "К";
     }
-
 
 
 }
