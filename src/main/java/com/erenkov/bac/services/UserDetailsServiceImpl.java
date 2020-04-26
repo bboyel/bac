@@ -1,14 +1,10 @@
 package com.erenkov.bac.services;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.erenkov.bac.dao.UserDAO;
 import com.erenkov.bac.entity.Role;
 import com.erenkov.bac.entity.User;
-import com.erenkov.bac.dao.RoleDAO;
 import com.erenkov.bac.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,12 +19,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepo userRepository;
-//
-//    @Autowired
-//    private UserDAO userDAO;
-//
-//    @Autowired
-//    private RoleDAO roleDAO;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

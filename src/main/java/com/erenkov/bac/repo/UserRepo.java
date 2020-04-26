@@ -10,4 +10,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findByUserName(String name);
 
+    User saveAndFlush(User user);
+
 }

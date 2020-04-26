@@ -1,10 +1,7 @@
 package com.erenkov.bac.controllers;
 
 
-import com.erenkov.bac.entity.Role;
 import com.erenkov.bac.entity.User;
-import com.erenkov.bac.dao.UserDAO;
-import com.erenkov.bac.repo.RoleRepo;
 import com.erenkov.bac.services.SecurityService;
 import com.erenkov.bac.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class RegistrationController {
-
-    @Autowired
-    private UserDAO userDAO;
-
-    @Autowired
-    private RoleRepo roleRepo;
 
     @Autowired
     private UserService userService;
@@ -39,11 +30,11 @@ public class RegistrationController {
     public String addUser(User user, Model model) {
 
         //Проверка что пользователь уже существует
-        //User userFromDb = userDAO.findUserAccount(user.getUserName());
-//        if (userFromDb != null){
-//            model.addAttribute("message", "User exists!");
-//            return "registration";
-//        }
+        User userFromDb = userService.findByUsername(user.getUserName());
+        if (userFromDb != null){
+            model.addAttribute("message", "User exists!");
+            return "registration";
+        }
 
         //Заполняем поля пользователя
         user.setEnabled("ACTIVE");
@@ -51,12 +42,7 @@ public class RegistrationController {
         user.setStatistic(0L);
         user.setEncrytedPassword("123");
 
-        //Создаём новую роль в БД
-//        Role usRole= new Role();
-//        usRole.setRoleName("ROLE_USER");
-//        roleRepo.saveAndFlush(usRole);
-
-         userService.save(user);
+         userService.saveAndFlush(user);
 
          //todo securityService.autoLogin(user.getUserName(), user.getEncrytedPassword());
 

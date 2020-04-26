@@ -4,36 +4,22 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "App_Roles",  uniqueConstraints = { //
-                @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "Role_Name") })
+@Table(name = "app_roles")
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
     private Long roleId;
 
     @Column(name = "role_name", length = 30, nullable = false, unique = true)
     private String roleName;
 
-    @ManyToMany//(mappedBy = "roles")
-    @JoinTable(name="user_roles",
-            joinColumns=@JoinColumn(name="User_Id"),
-            inverseJoinColumns=@JoinColumn(name="Role_Id"))
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
     public Role() {
-
     }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
 
     public Long getRoleId() {
         return roleId;
@@ -51,4 +37,20 @@ public class Role {
         this.roleName = roleName;
     }
 
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
+                ", users=" + users +
+                '}';
+    }
 }

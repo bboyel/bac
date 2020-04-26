@@ -4,13 +4,11 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "App_Users", //
-        uniqueConstraints = { //
-                @UniqueConstraint(name = "APP_USER_UK", columnNames = "username") })
+@Table(name = "app_users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
@@ -27,28 +25,14 @@ public class User {
     private Long statistic;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable (name="User_Roles",
-            joinColumns=@JoinColumn (name="User_Id"),
-            inverseJoinColumns=@JoinColumn(name="Role_Id"))
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id",
+            referencedColumnName = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id",
+            referencedColumnName = "role_id")})
     private Set<Role> roles;
 
     public User() {
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Long getStatistic() {
-        return statistic;
-    }
-
-    public void setStatistic(Long statistic) {
-        this.statistic = statistic;
     }
 
     public Long getUserId() {
@@ -81,5 +65,33 @@ public class User {
 
     public void setEnabled(String enabled) {
         this.enabled = enabled;
+    }
+
+    public Long getStatistic() {
+        return statistic;
+    }
+
+    public void setStatistic(Long statistic) {
+        this.statistic = statistic;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", encrytedPassword='" + encrytedPassword + '\'' +
+                ", enabled='" + enabled + '\'' +
+                ", statistic=" + statistic +
+                ", roles=" + roles +
+                '}';
     }
 }
