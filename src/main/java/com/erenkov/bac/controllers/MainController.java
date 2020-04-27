@@ -16,7 +16,7 @@ import java.security.Principal;
 @Controller
 public class MainController {
 
-    @RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/welcome"}, method = RequestMethod.GET)
     public String welcomePage() {
         return "welcome";
     }
@@ -29,32 +29,25 @@ public class MainController {
 
     @RequestMapping(value = "/403", method = RequestMethod.GET)
     public String accessDenied(Model model, Principal principal) {
-
         if (principal != null) {
-            User loginedUser = (User) ((Authentication) principal).getPrincipal();
 
+            User loginedUser = (User) ((Authentication) principal).getPrincipal();
             String userInfo = WebUtils.toString(loginedUser);
 
             model.addAttribute("userInfo", userInfo);
-
             String message = "Hi " + principal.getName() //
                     + "<br> You do not have permission to access this page!";
             model.addAttribute("message", message);
-
         }
-
         return "403Page";
     }
 
-    @RequestMapping(value = { "/logoutSuccessfulPage" }, method = RequestMethod.GET)
+    @RequestMapping(value = {"/logoutSuccessfulPage"}, method = RequestMethod.GET)
     public String viewLogoutSuccessfulPage() {
         return "logoutSuccessfulPage";
     }
 
 }
-    //DB
-//    @Autowired
-//    private PersonDAO personDAO;
 
 
 //    @ResponseBody
@@ -130,7 +123,7 @@ public class MainController {
 ////    }
 //
 ////}
-    //security
+//security
 //    @RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
 //    public String welcomePage(Model model) {
 //        model.addAttribute("title", "Welcome");

@@ -29,18 +29,18 @@ public class RegistrationController {
     @RequestMapping(value = "/add_user", method = RequestMethod.POST)
     public String addUser(User user, Model model) {
 
+        //Заполняем поля пользователя
+        user.setEnabled("ACTIVE");
+        user.setUserName("Mike");
+        user.setStatistic(0L);
+        user.setEncrytedPassword("123");
+
         //Проверка что пользователь уже существует
         User userFromDb = userService.findByUsername(user.getUserName());
         if (userFromDb != null){
             model.addAttribute("message", "User exists!");
             return "registration";
         }
-
-        //Заполняем поля пользователя
-        user.setEnabled("ACTIVE");
-        user.setUserName("Mike");
-        user.setStatistic(0L);
-        user.setEncrytedPassword("123");
 
          userService.saveAndFlush(user);
 
